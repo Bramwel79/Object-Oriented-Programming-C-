@@ -1,77 +1,130 @@
 #include<iostream>
+#include<ctime>
+#include<cstdlib>
 
 using namespace std;
 
 class Dog
 {
+    friend ostream& operator<<(ostream&, const Dog&); //output or insertion operator
+    friend istream& operator>>(istream&, Dog&); //input or extraction operator
 private:
     string name;
-    string breed;
-    int age;
-    const static double licence_fee = 12.25;
+    string eyeColour;
+
 public:
+    Dog();
+    Dog(string,string);
+    Dog operator*(Dog);
     string getName();
-    void setName(string);
-    string getBreed();
-    void setBreed(string);
-    int getAge();
-    void setAge(int);
-    void displayData();
+    string getEyeColour();
+    void setName(string n);
+    void setEyeColour(string eye);
 
 };
+Dog::Dog()
+{
 
+}
+Dog::Dog(string n,string e)
+{
+    name = n;
+    eyeColour = e;
+}
+void Dog::setEyeColour(string e)
+{
+    eyeColour = e;
+}
+void Dog::setName(string n)
+{
+    name = n;
+}
 string Dog::getName()
 {
     return name;
 }
 
-void Dog::setName(string s)
+string Dog::getEyeColour()
 {
-    name = s;
+    return eyeColour;
 }
 
-string Dog::getBreed()
+Dog Dog::operator*(Dog dog)
 {
-    return breed;
+   Dog temp;
+   temp.name = name;
+   const int DIVISOR = 2;
+   srand((unsigned)time(NULL));
+   int result;
+   result = rand() % DIVISOR;
+
+   //get dog breed
+   if(temp.name.compare(dog.name) == 0)
+   {
+       temp.name = dog.name;
+   }
+   if(temp.name.compare(dog.name) != 0)
+   {
+       temp.name = "Mixed";
+   }
+
+   //get eye colour
+   if(result == 0)
+   {
+       temp.eyeColour = eyeColour;
+   }
+   if(result == 1)
+   {
+       temp.eyeColour = dog.eyeColour;
+   }
+
+
+   return  temp;
+}
+ostream& operator<<(ostream& out,const Dog& dog)
+{
+    out << "Dog Breed is "<<dog.name <<endl<<
+    "Eye colour is "<<dog.eyeColour <<endl;
+    return out;
+
 }
 
-void Dog::setBreed(string b)
+istream& operator>>(istream& in,Dog& dog)
 {
-    breed = b;
-}
+    cout << endl; // to clear the buffer
+    cout << "Enter dog breed: ";
+    in >>dog.name;
+    cout <<"Enter eye colour: ";
+    in >>dog.eyeColour;
+    cout<<endl;
+    return in;
 
-int Dog::getAge()
-{
-    return age;
 }
-
-void Dog::setAge(int age)
-{
-    this->age = age;
-}
-
-void Dog::displayData()
-{
-    cout <<"Dog's Name: "<< name<<endl;
-    cout <<"Dog's Breed: "<<breed<<endl;
-    cout <<"Dog's Age: "<<age<<endl;
-    cout <<"Licence fee is: "<<licence_fee<<endl;
-}
-
 int main()
 {
-   Dog dog;
-   Dog dog1;
+   Dog dog1("Bulldog","brown");
+   Dog dog2("Bulldog","pink");
+   Dog dog3("Alsatian","black");
+   Dog dog4("German Shepherd","blue");
+   Dog dogResult1;
+   Dog dogResult2;
 
-   dog.setName("Biky");
-   dog.setBreed("Bulldog");
-   dog.setAge(5);
-   dog.displayData();
-   cout <<"\n";
-   dog1.setName("Smoky");
-   dog1.setBreed("hans");
-   dog1.setAge(4);
-   dog1.displayData();
+   cout <<"First pair of same breed"<<endl;
+   cout <<"************************"<<endl;
+   for(int i = 0; i <=7;++i)
+   {
+       dogResult1 = dog1 * dog2;
+   }
+   cout << dogResult1<<endl;
+
+   cout <<"Second pair of different breed"<<endl;
+   cout <<"******************************"<<endl;
+
+    for(int i = 0; i <=7;++i)
+   {
+       dogResult2 = dog3 * dog4;
+   }
+   cout << dogResult2;
 
     return 0;
 }
